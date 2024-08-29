@@ -1,0 +1,48 @@
+name: Pantheon - Create/Delete Multidev Environment
+
+on:
+  create:
+    branches:
+      - feature/multidev/*
+
+  delete:
+    branches:
+      - feature/multidev/*
+
+jobs:
+  create_multidev:
+    name: Pantheon - Multidev Environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.1.7
+        if: github.event_name == 'create'
+
+      - name: Set Variables
+        shell: bash
+        id: multidev-env
+        env:
+          REF_NAME: ${{ github.event_name == 'create' && github.ref_name || github.event.ref }}
+        run: |
+          echo "name=$(echo ${REF_NAME} | cut -d '/' -f3)" >> $GITHUB_OUTPUT
+
+          if [[ "${{ github.event_name }}" == "create" ]]; then
+            echo "action_title=Create" >> $GITHUB_OUTPUT
+          else
+            echo "action_title=Delete" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Pantheon - ${{ steps.multidev-env.outputs.action_title }} Multidev Environment
+        uses: padillaco/auto-deploy/pantheon/multidev@v1
+        with:
+          pantheon_site_slug: [pantheon-site-slug]
+          pantheon_machine_token: ${{ secrets.PANTHEON_MACHINE_TOKEN }}
+          multidev_env_name: ${{ steps.multidev-env.outputs.name }}
+          action: ${{ github.event_name }}
+
+      - name: Build and Deploy to Pantheon
+        uses: ./.github/actions/build-and-deploy
+        if: github.event_name == 'create'
+        with:
+          # SSH private key to use for remote repository authentication
+          ssh_private_key: ${{ secrets.PANTHEON_SSH_PRIVATE_KEY }}

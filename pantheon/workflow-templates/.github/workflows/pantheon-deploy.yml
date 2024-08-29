@@ -16,7 +16,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4.1.7
 
-      - name: Build and Deploy
+      - name: Build and Deploy to Pantheon
         uses: ./.github/actions/build-and-deploy
         with:
           # SSH private key to use for remote repository authentication

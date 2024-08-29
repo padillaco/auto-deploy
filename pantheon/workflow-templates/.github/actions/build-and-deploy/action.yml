@@ -30,7 +30,7 @@ runs:
         rm -rf node_modules/
 
     - name: Deploy to Pantheon
-      uses: padillaco/pantheon-deploy-action@v2
+      uses: padillaco/auto-deploy/pantheon/deploy@v1
       with:
         # Base directory for rsync
         base_directory: .
