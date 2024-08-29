@@ -6,5 +6,5 @@ The Pantheon workflow also includes creating/deleting a multidev environment, an
 
 ## Auto-Deployment Setup 
 
-- Pantheon → [PANTHEON_SETUP.md](./PANTHEON_SETUP.md)
-- WP Engine → [WPENGINE_SETUP.md](./WPENGINE_SETUP.md)
+- [Pantheon Setup](./PANTHEON_SETUP.md)
+- [WP Engine Setup](./WPENGINE_SETUP.md)
