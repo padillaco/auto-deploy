@@ -27,8 +27,7 @@ These actions are triggered when pushing to a specific branch or when a pull req
 Replace the following placeholders within the specified workflow/action files:
 
 1. `[pantheon-site-slug]` → The Pantheon site slug. Example: _the-site-slug_
-    - workflows/pantheon-create-multidev.yml
-    - workflows/pantheon-delete-multidev.yml
+    - workflows/pantheon-multidev.yml
     - workflows/pantheon-promote-code.yml
 
 2. `[pantheon-site-id]` → The Pantheon site ID. Format: _XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXX_
