@@ -1,6 +1,9 @@
-# Deploy to Pantheon (GitHub Action)
+# Pantheon Auto-Deployment Setup
 
-This repository contains a GitHub action to setup code deployment from a GitHub repository to a Pantheon development or multidev environment. The Shell script that runs the actual deployment can be found in [this repo](https://github.com/padillaco/action-deploy-to-remote-repository).
+This guide contains instructions to configure workflow files that:
+1. Deploy code from a GitHub repository to a Pantheon development/multidev environment.
+2. Create/Delete a multidev environment.
+3. Promote code from dev to test, or test to live.
 
 ## 1. Copy the Workflow Template Files
 
@@ -19,7 +22,7 @@ _Note: Steps 2 and 3 are optional, and can be removed if the WordPress theme doe
 
 These actions are triggered when pushing to a specific branch or when a pull request is closed and merged into a branch. Feel free to adjust the branch names for the **on push** or **on pull request** trigger located at the top of the workflow file.
 
-## 2. Replace Placeholders
+## 3. Replace Placeholders
 
 Replace the following placeholders within the specified workflow/action files:
 
@@ -34,7 +37,7 @@ Replace the following placeholders within the specified workflow/action files:
 3. `[theme-name]` → The WordPress theme folder that includes source files for front-end assets.
     - actions/build-and-deploy/action.yml
 
-## 3. Configure the 'Build and Deploy to Pantheon' Action
+## 4. Configure the 'Build and Deploy to Pantheon' Action
 
 The **Build and Deploy to Pantheon** action is located at [.github/actions/build-and-deploy/action.yml](.github/actions/build-and-deploy/action.yml). The following variables in the **Deploy to Pantheon** step can be configured:
     
@@ -42,7 +45,7 @@ The **Build and Deploy to Pantheon** action is located at [.github/actions/build
 - The `destination_directory` variable is the path to the destination directory on the Pantheon environment where the code will be deployed. The default value is `.`, or the WordPress install root of the Pantheon environment.
 - The `exclude_list` variable is the list of files/folders that will be excluded from deployment. The default value is: `.git, .github, .gitmodules, node_modules, .ddev`
 
-## 4. Generate an SSH Key Pair
+## 5. Generate an SSH Key Pair
 
 WP Engine requires that an SSH public key be added to environment to enable GitPush. See [WP Engine: Git Version Control System](https://wpengine.com/support/git/) for more details.
 

@@ -26,6 +26,9 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4.1.7
+
     - name: Set Output Variables - Multidev Branch Name
       if: startsWith(github.ref_name, 'feature/multidev/') || (startsWith(github.event.workflow_run.head_branch, 'feature/multidev/') && github.event.workflow.name == 'Pantheon Create Multidev Environment')
       shell: bash
@@ -39,8 +42,8 @@ runs:
           echo "name=$(echo ${HEAD_BRANCH} | cut -d '/' -f3)" >> $GITHUB_OUTPUT
         fi
 
-    - name: Deploy to Remote Repository
-      uses: padillaco/action-deploy-to-remote-repository@main
+    - name: Push to Remote Repository
+      uses: ./push-to-remote-repo
       with:
         base_directory: ${{ inputs.base_directory }}
         destination_directory: ${{ inputs.destination_directory }}

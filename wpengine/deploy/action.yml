@@ -41,6 +41,9 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4.1.7
+
     - name: Set WP Engine Deploy Environment
       shell: bash
       id: wpengine-deploy-env
@@ -59,8 +62,8 @@ runs:
           exit 1
         fi
 
-    - name: Deploy to Remote Repository
-      uses: padillaco/action-deploy-to-remote-repository@main
+    - name: Push to Remote Repository
+      uses: ./push-to-remote-repo
       with:
         base_directory: ${{ inputs.base_directory }}
         destination_directory: ${{ inputs.destination_directory }}

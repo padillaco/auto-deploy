@@ -1,14 +1,12 @@
-# Deploy to WP Engine (GitHub Action)
+# WP Engine Auto-Deployment Setup
 
-This repository contains a GitHub action to setup code deployment from a GitHub repository to a WP Engine environment. The Shell script that runs the actual deployment can be found in [this repo](https://github.com/padillaco/action-deploy-to-remote-repository).
+This guide contains instructions to configure a workflow file that deploys code from a GitHub repository to a WP Engine environment.
 
-## Implementation
-
-### 1. Copy the Workflow File Template
+## 1. Copy the Workflow File Template
 
 Copy this [.github](/example/.github/) folder to the root of the repository that is being setup for auto-deployments. If the **.github/workflows** folder already exists within the repository, then copy only the [wpengine-deploy.yml](/example/.github/workflows/wpengine-deploy.yml) workflow file to the workflows folder.
 
-### 2. Actions
+## 2. Actions
 
  The [wpengine-deploy.yml](/example/.github/workflows/wpengine-deploy.yml) workflow file includes 3 actions:
 
@@ -20,7 +18,7 @@ _Note: Actions 1 and 2 are optional, and can be removed if the WordPress theme d
 
 These actions are triggered when pushing to a specific branch or when a pull request is closed and merged into a branch. Feel free to adjust the branch names for the **on push** or **on pull request** trigger located at the top of the workflow file.
 
-### 3. Variables and Configuration
+## 3. Variables and Configuration
 
 1. The workflow file template contains the following placeholders that need to be replaced with their actual value:
     - GitHub Repository Branches:
@@ -42,7 +40,7 @@ These actions are triggered when pushing to a specific branch or when a pull req
     - If needed, modify the list of excluded files that should be deployed using the `exclude_list` variable. The default value is: `.git, .github, .gitmodules, node_modules, .ddev`
     - You can delete the related variables for each environment that does not support deployments.
 
-### 4. Generate an SSH Key Pair
+## 4. Generate an SSH Key Pair
 
 WP Engine requires that an SSH public key be added to environment to enable GitPush. See [WP Engine: Git Version Control System](https://wpengine.com/support/git/) for more details.
 
