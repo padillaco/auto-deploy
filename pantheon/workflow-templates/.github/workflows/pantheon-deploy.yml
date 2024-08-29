@@ -1,0 +1,23 @@
+name: Build and Deploy to Pantheon
+
+on:
+  # Only allow a push event on develop and multidev branches
+  push:
+    branches:
+      - develop
+      - feature/multidev/*
+
+jobs:
+  build_and_deploy:
+    name: Build and Deploy to Pantheon
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'develop' && !(startsWith(github.event.head_commit.message, 'Merge pull request') && contains(github.event.head_commit.message, '/feature/multidev/')) || (startsWith(github.ref_name, 'feature/multidev/') && github.event.created != true)
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.1.7
+
+      - name: Build and Deploy
+        uses: ./.github/actions/build-and-deploy
+        with:
+          # SSH private key to use for remote repository authentication
+          ssh_private_key: ${{ secrets.PANTHEON_SSH_PRIVATE_KEY }}

@@ -1,0 +1,56 @@
+name: 'Pantheon Promote Code'
+description: 'Deploys code from one environment to another on Pantheon using Terminus.'
+author: 'padillaco'
+branding:
+  icon: 'cloud-lightning'
+  color: 'blue'
+inputs:
+  pantheon_site_slug:
+    description: 'The slug name of the Pantheon site to deploy to.'
+    required: true
+  pantheon_machine_token:
+    description: 'Pantheon machine token to use.'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Set Pantheon Environment Variables
+      shell: bash
+      id: pantheon-env
+      run: |
+        if [[ "$(echo ${GITHUB_HEAD_REF})" == feature/multidev/* && "$(echo ${GITHUB_BASE_REF})" == "develop" ]]; then
+          echo "pantheon_env_from=$(echo ${GITHUB_HEAD_REF} | cut -d '/' -f3)" >> $GITHUB_OUTPUT
+          echo "pantheon_env_to=dev" >> $GITHUB_OUTPUT
+        elif [[ "$(echo ${GITHUB_HEAD_REF})" == "develop" && "$(echo ${GITHUB_BASE_REF})" == "staging" ]]; then
+          echo "pantheon_env_from=dev" >> $GITHUB_OUTPUT
+          echo "pantheon_env_to=test" >> $GITHUB_OUTPUT
+        elif [[ "$(echo ${GITHUB_HEAD_REF})" == "staging" && "$(echo ${GITHUB_BASE_REF})" == "main" ]]; then
+          echo "pantheon_env_from=test" >> $GITHUB_OUTPUT
+          echo "pantheon_env_to=live" >> $GITHUB_OUTPUT
+        else
+          echo "Invalid branch detection for Pantheon code promotion."
+          exit 1
+        fi
+    
+    - name: Install Terminus
+      shell: bash
+      run: |
+        mkdir -p /tmp/terminus && cd /tmp/terminus
+        curl -L "https://github.com/pantheon-systems/terminus/releases/download/3.5.2/terminus.phar" --output terminus
+        chmod +x terminus
+        sudo mv terminus /usr/local/bin/terminus
+    
+    - name: Authenticate with Terminus
+      shell: bash
+      run: terminus auth:login --machine-token=${{ inputs.pantheon_machine_token }}
+    
+    - name: Pantheon Deploy Code from ${{ steps.pantheon-env.outputs.pantheon_env_from }} to ${{ steps.pantheon-env.outputs.pantheon_env_to }}
+      shell: bash
+      run: |
+        echo "Promoting code from ${{ steps.pantheon-env.outputs.pantheon_env_from }} to ${{ steps.pantheon-env.outputs.pantheon_env_to }}."
+
+        if [[ $GITHUB_HEAD_REF == feature/multidev/* && "${{ steps.pantheon-env.outputs.pantheon_env_to }}" == "dev" ]]; then
+          terminus multidev:merge-to-dev ${{ inputs.pantheon_site_slug }}.${{ steps.pantheon-env.outputs.pantheon_env_from }}
+        else
+          terminus env:deploy ${{ inputs.pantheon_site_slug }}.${{ steps.pantheon-env.outputs.pantheon_env_to }} --note="$(git log -1 --pretty=%B)"
+        fi

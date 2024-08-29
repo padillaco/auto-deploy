@@ -1,0 +1,70 @@
+name: 'Deploy to WP Engine'
+description: 'Deploys local GitHub repo to WP Engine.'
+author: 'padillaco'
+branding:
+  icon: 'cloud-lightning'
+  color: 'yellow'
+inputs:
+  base_directory:
+    description: 'Base directory for rsync'
+    required: false
+    default: '.'
+  destination_directory:
+    description: 'Destination directory for rsync in remote repository'
+    required: false
+    default: '.'
+  exclude_list:
+    description: 'Comma-separated list of files and directories to exclude from sync'
+    required: false
+    default: '.git, .github, .gitmodules, node_modules'
+  source_development_branch:
+    description: 'The development branch name in the source repository'
+    required: false
+  source_staging_branch:
+    description: 'The staging branch name in the source repository'
+    required: false
+  source_production_branch:
+    description: 'The production branch name in the source repository'
+    required: false
+  wpengine_development_env:
+    description: 'The WP Engine development evironment name'
+    required: false
+  wpengine_staging_env:
+    description: 'The WP Engine staging evironment name'
+    required: false
+  wpengine_production_env:
+    description: 'The WP Engine production evironment name'
+    required: false
+  ssh_private_key:
+    description: 'SSH private key to use for remote repository authentication'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Set WP Engine Deploy Environment
+      shell: bash
+      id: wpengine-deploy-env
+      run: |
+        if [[ ($GITHUB_REF_NAME == "${{ inputs.source_development_branch }}" || $GITHUB_BASE_REF == "${{ inputs.source_development_branch }}") && "${{ inputs.wpengine_development_env }}" != "" ]]; then
+          echo "wpengine_deploy_env=${{ inputs.wpengine_development_env }}" >> $GITHUB_OUTPUT
+        
+        elif [[ ($GITHUB_REF_NAME == "${{ inputs.source_staging_branch }}" || $GITHUB_BASE_REF == "${{ inputs.source_staging_branch }}") && "${{ inputs.wpengine_staging_env }}" != "" ]]; then
+          echo "wpengine_deploy_env=${{ inputs.wpengine_staging_env }}" >> $GITHUB_OUTPUT
+        
+        elif [[ ($GITHUB_REF_NAME == "${{ inputs.source_production_branch }}" || $GITHUB_BASE_REF == "${{ inputs.source_production_branch }}") && "${{ inputs.wpengine_production_env }}" != "" ]]; then
+          echo "wpengine_deploy_env=${{ inputs.wpengine_production_env }}" >> $GITHUB_OUTPUT
+        
+        else
+          echo "No WP Engine environment was set for deployment."
+          exit 1
+        fi
+
+    - name: Deploy to Remote Repository
+      uses: padillaco/action-deploy-to-remote-repository@main
+      with:
+        base_directory: ${{ inputs.base_directory }}
+        destination_directory: ${{ inputs.destination_directory }}
+        exclude_list: ${{ inputs.exclude_list }}
+        remote_repo: 'git@git.wpengine.com:${{ steps.wpengine-deploy-env.outputs.wpengine_deploy_env }}.git'
+        remote_branch: master
+        ssh_private_key: ${{ inputs.ssh_private_key }}
