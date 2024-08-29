@@ -37,7 +37,7 @@ runs:
       run: sudo apt-get install -y rsync
       shell: bash
     
-    - id: Push to Remote Repository
+    - name: Push to Remote Repository
       env:
         BASE_DIRECTORY: ${{ inputs.base_directory }}
         DESTINATION_DIRECTORY: ${{ inputs.destination_directory }}
