@@ -4,7 +4,7 @@ This repository contains GitHub workflows and actions that deploy repository cod
 
 The Pantheon workflow also includes creating/deleting a multidev environment, and promoting code from dev to test, or test to live.
 
-## Auto-Deployment Setup 
+## Setup Guides
 
 - [Pantheon Setup](./PANTHEON_SETUP.md)
 - [WP Engine Setup](./WPENGINE_SETUP.md)
