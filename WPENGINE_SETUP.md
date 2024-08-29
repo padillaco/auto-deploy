@@ -4,11 +4,11 @@ This guide contains instructions to configure a workflow file that deploys code 
 
 ## 1. Copy the Workflow File Template
 
-Copy this [.github](/example/.github/) folder to the root of the repository that is being setup for auto-deployments. If the **.github/workflows** folder already exists within the repository, then copy only the [wpengine-deploy.yml](/example/.github/workflows/wpengine-deploy.yml) workflow file to the workflows folder.
+Copy the [.github](/wpengine/workflow-templates/.github) folder to the WordPress root of the repository that is being setup for auto-deployments.
 
 ## 2. Actions
 
- The [wpengine-deploy.yml](/example/.github/workflows/wpengine-deploy.yml) workflow file includes 3 actions:
+The [.github/workflows/wpengine-deploy.yml](/wpengine/workflow-templates/.github/workflows/wpengine-deploy.yml) workflow file includes 3 actions:
 
 1. Setup Node: Downloads and caches Node.js and adds it to the PATH
 2. Install JS Dependencies and Build Theme Assets
@@ -46,11 +46,13 @@ WP Engine requires that an SSH public key be added to environment to enable GitP
 
 1. Open the terminal and run:
     ```bash
-    ssh-keygen -t ed25519 -C "wpengine-deploy" -f ~/.ssh/wpengine-deploy
+    ssh-keygen -t ed25519 -C "[repository-slug]-github" -f ~/.ssh/wpengine-deploy
     ```
-    _Note 1: Do not set a passphrase when generating the public/private key pair._
+    _Note 1: Replace `[repository-slug]` with the repository slug name._
 
-    _Note 2: You can replace `~/.ssh/wpengine-deploy` with any temporary file name and path since the key pair will be deleted after use._
+    _Note 2: You can replace the `~/.ssh/wpengine-deploy` path with any path since this key pair is temporary and will be deleted after use._
+    
+    _Note 3: Do not set a passphrase when generating the public/private key pair._
 
 2. Copy the private key by running:
     ```bash

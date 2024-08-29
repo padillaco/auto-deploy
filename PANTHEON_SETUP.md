@@ -7,11 +7,11 @@ This guide contains instructions to configure workflow files that:
 
 ## 1. Copy the Workflow Template Files
 
-Copy the [.github](/example/.github/) folder to the WordPress root of the repository that is being setup for auto-deployments.
+Copy the [.github](/pantheon/workflow-templates/.github) folder to the WordPress root of the repository that is being setup for auto-deployments.
 
 ## 2. Actions
 
-The [.github/actions/build-and-deploy/action.yml](.github/actions/build-and-deploy/action.yml) action file includes 4 steps:
+The [.github/actions/build-and-deploy/action.yml](/pantheon/workflow-templates/.github/actions/build-and-deploy/action.yml) action file includes 4 steps:
 
 1. Checkout Repository
 2. Setup Node: Downloads and caches Node.js and adds it to the PATH
@@ -39,7 +39,7 @@ Replace the following placeholders within the specified workflow/action files:
 
 ## 4. Configure the 'Build and Deploy to Pantheon' Action
 
-The **Build and Deploy to Pantheon** action is located at [.github/actions/build-and-deploy/action.yml](.github/actions/build-and-deploy/action.yml). The following variables in the **Deploy to Pantheon** step can be configured:
+The **Build and Deploy to Pantheon** action is located at [.github/actions/build-and-deploy/action.yml](/pantheon/workflow-templates/.github/actions/build-and-deploy/action.yml). The following variables in the **Deploy to Pantheon** step can be configured:
     
 - The `base_directory` variable is the path to the code within the repository that will be deployed. The default value is `.`, or the root of the repository.
 - The `destination_directory` variable is the path to the destination directory on the Pantheon environment where the code will be deployed. The default value is `.`, or the WordPress install root of the Pantheon environment.
