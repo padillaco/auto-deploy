@@ -4,7 +4,7 @@ This guide contains instructions to configure a workflow file that deploys code 
 
 ## 1. Copy the Workflow File Template
 
-Copy the [.github](/wpengine/workflow-templates/.github) folder to the WordPress root of the repository that is being setup for auto-deployments.
+Copy this [.github](/wpengine/workflow-templates/.github) folder to the WordPress root of the repository that is being setup for auto-deployments.
 
 ## 2. Actions
 
