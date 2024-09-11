@@ -7,7 +7,7 @@ This guide contains instructions to configure workflow files that:
 
 ## 1. Copy the Workflow Template Files
 
-Copy the [.github](/pantheon/workflow-templates/.github) folder to the WordPress root of the repository that is being setup for auto-deployments.
+Copy this [.github](/pantheon/workflow-templates/.github) folder to the WordPress root of the repository that is being setup for auto-deployments.
 
 ## 2. Actions
 
