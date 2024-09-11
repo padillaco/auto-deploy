@@ -84,4 +84,4 @@ Pantheon requires that an SSH public key be added to a user account to authentic
 2. Copy the Machine Token, then go to the **Settings → Secrets and variables → Actions** page of the repository and add a new repository secret named `PANTHEON_MACHINE_TOKEN` then enter the contents of the token.
 
 ---
-### Each push and merged pull request into the development, staging, or production branch should now trigger a deployment.
+### Each push and merged pull request into the development, staging, or production branch should now trigger a Pantheon deployment or promote code action.
