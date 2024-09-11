@@ -42,7 +42,7 @@ These actions are triggered when pushing to a specific branch or when a pull req
 
 ## 4. Generate an SSH Key Pair
 
-WP Engine requires that an SSH public key be added to environment to enable GitPush. See [WP Engine: Git Version Control System](https://wpengine.com/support/git/) for more details.
+WP Engine requires that an SSH public key be added to an environment to enable GitPush. See [WP Engine: Git Version Control System](https://wpengine.com/support/git/) for more details.
 
 1. Open the terminal and run:
     ```bash
@@ -74,4 +74,4 @@ WP Engine requires that an SSH public key be added to environment to enable GitP
     ```
 
 ---
-### Each push and merged pull request into the development, staging, or production branch should now trigger a deployment.
+### Each push and merged pull request into the development, staging, or production branch should now trigger a Pantheon deployment or promote code action.

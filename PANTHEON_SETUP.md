@@ -46,11 +46,11 @@ The **Build and Deploy to Pantheon** action is located at [.github/actions/build
 
 ## 5. Generate an SSH Key Pair
 
-WP Engine requires that an SSH public key be added to environment to enable GitPush. See [WP Engine: Git Version Control System](https://wpengine.com/support/git/) for more details.
+Pantheon requires that an SSH public key be added to a user account to authenticate when accessing the codebase via SSH. See [Generate and Add SSH Keys](https://docs.pantheon.io/ssh-keys) for more details.
 
 1. Open the terminal and run:
     ```bash
-    ssh-keygen -t rsa -m PEM -C "[repository-slug]-github" -f ~/.ssh/pantheon-deploy
+    ssh-keygen -t rsa -m PEM -C "[repository-slug]-github-autodeploy" -f ~/.ssh/pantheon-deploy
     ```
     _Note 1: Replace `[repository-slug]` with the repository slug name._
 
@@ -76,6 +76,12 @@ WP Engine requires that an SSH public key be added to environment to enable GitP
     ```bash
     rm ~/.ssh/pantheon-deploy ~/.ssh/pantheon-deploy.pub
     ```
+
+## 6. Generate a Terminus Machine Token
+
+1. From the Pantheon dashboard, in the development@padillaco.com account, go to the **Personal Settings → Machine Tokens** section and add a new Machine Token named **[repository-name] GitHub Auto-Deploy**.
+
+2. Copy the Machine Token, then go to the **Settings → Secrets and variables → Actions** page of the repository and add a new repository secret named `PANTHEON_MACHINE_TOKEN` then enter the contents of the token.
 
 ---
 ### Each push and merged pull request into the development, staging, or production branch should now trigger a deployment.
