@@ -50,7 +50,7 @@ Pantheon requires that an SSH public key be added to a user account to authentic
 
 1. Open the terminal and run:
     ```bash
-    ssh-keygen -t rsa -m PEM -C "[repository-slug]-github-autodeploy" -f ~/.ssh/pantheon-deploy
+    ssh-keygen -t rsa -m PEM -C "[repository-slug]-github" -f ~/.ssh/pantheon-deploy
     ```
     _Note 1: Replace `[repository-slug]` with the repository slug name._
 
