@@ -19,12 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref_name == '[development-branch]' || github.ref_name == '[staging-branch]' || github.ref_name == '[production-branch]' || (github.event.pull_request.merged && (github.base_ref == '[development-branch]' || github.base_ref == '[staging-branch]' || github.base_ref == '[production-branch]'))
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.1.7
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4.0.3
         with:
-          node-version: 18
+          node-version: 20
           cache: npm
           cache-dependency-path: wp-content/themes/[theme-folder]
       
@@ -36,7 +36,7 @@ jobs:
           rm -rf node_modules/
       
       - name: Deploy to WP Engine
-        uses: padillaco/wpengine-deploy-action@main
+        uses: padillaco/auto-deploy/wpengine/deploy@v1
         with:
           # Base directory for rsync
           base_directory: .
