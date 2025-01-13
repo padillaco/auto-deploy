@@ -50,31 +50,31 @@ Pantheon requires that an SSH public key be added to a user account to authentic
 
 1. Open the terminal and run:
     ```bash
-    ssh-keygen -t rsa -m PEM -C "[repository-slug]-github" -f ~/.ssh/pantheon-deploy
+    ssh-keygen -t rsa -m PEM -C "[repository-slug]-github-autodeploy" -f ~/.ssh/github-autodeploy
     ```
-    _Note 1: Replace `[repository-slug]` with the repository slug name._
+    _Note: Replace `[repository-slug]` with the repository slug name._
 
-    _Note 2: You can replace the `~/.ssh/pantheon-deploy` path with any path since this key pair is temporary and will be deleted after use._
+    _Note: You can replace the `~/.ssh/github-autodeploy` path with any path since this key pair is temporary and will be deleted after use._
     
-    _Note 3: Do not set a passphrase when generating the public/private key pair._
+    _Note: Do not set a passphrase when generating the public/private key pair._
 
 2. Copy the private key by running:
     ```bash
-    cat ~/.ssh/pantheon-deploy | pbcopy
+    cat ~/.ssh/github-autodeploy | pbcopy
     ```
 
     Go to the **Settings → Secrets and variables → Actions** page of the repository and add a new repository secret named `PANTHEON_SSH_PRIVATE_KEY` then enter the contents of the private key as the value.
 
 3. Copy the public key by running:
     ```bash
-    cat ~/.ssh/pantheon-deploy.pub | pbcopy
+    cat ~/.ssh/github-autodeploy.pub | pbcopy
     ```
 
     From the Pantheon dashboard, in the development@padillaco.com account, go to the **Personal Settings → SSH Keys** section and add the public key.
 
 4. Remove the local public and private key:
     ```bash
-    rm ~/.ssh/pantheon-deploy ~/.ssh/pantheon-deploy.pub
+    rm ~/.ssh/github-autodeploy ~/.ssh/github-autodeploy.pub
     ```
 
 ## 6. Generate a Terminus Machine Token

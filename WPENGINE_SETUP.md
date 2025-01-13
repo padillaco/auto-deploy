@@ -46,31 +46,31 @@ WP Engine requires that an SSH public key be added to an environment to enable G
 
 1. Open the terminal and run:
     ```bash
-    ssh-keygen -t ed25519 -C "[repository-slug]-github" -f ~/.ssh/wpengine-deploy
+    ssh-keygen -t ed25519 -C "[repository-slug]-github-autodeploy" -f ~/.ssh/github-autodeploy
     ```
     _Note 1: Replace `[repository-slug]` with the repository slug name._
 
-    _Note 2: You can replace the `~/.ssh/wpengine-deploy` path with any path since this key pair is temporary and will be deleted after use._
+    _Note 2: You can replace the `~/.ssh/github-autodeploy` path with any path since this key pair is temporary and will be deleted after use._
     
     _Note 3: Do not set a passphrase when generating the public/private key pair._
 
 2. Copy the private key by running:
     ```bash
-    cat ~/.ssh/wpengine-deploy | pbcopy
+    cat ~/.ssh/github-autodeploy | pbcopy
     ```
 
     Go to the **Settings → Secrets and variables → Actions** page of the repository and add a new repository secret named `WPENGINE_SSH_PRIVATE_KEY` then enter the contents of the private key as the value.
 
 3. Copy the public key by running:
     ```bash
-    cat ~/.ssh/wpengine-deploy.pub | pbcopy
+    cat ~/.ssh/github-autodeploy.pub | pbcopy
     ```
 
     From the WP Engine dashboard, go to the GitPush section of the related environment to add the public key. Enter `[repository-slug]-github`as the name of the key, then enter the contents of the public key.
 
 4. Remove the public and private key:
     ```bash
-    rm ~/.ssh/wpengine-deploy ~/.ssh/wpengine-deploy.pub
+    rm ~/.ssh/github-autodeploy ~/.ssh/github-autodeploy.pub
     ```
 
 ---
