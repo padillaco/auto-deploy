@@ -8,7 +8,7 @@ Copy this [.github](/wpengine/workflow-templates/.github) folder to the WordPres
 
 ## 2. Actions
 
-The [.github/workflows/wpengine-deploy.yml](/wpengine/workflow-templates/.github/workflows/wpengine-deploy.yml) workflow file includes 3 actions:
+The [.github/workflows/github-autodeploy.yml](/wpengine/workflow-templates/.github/workflows/github-autodeploy.yml) workflow file includes 3 actions:
 
 1. Setup Node: Downloads and caches Node.js and adds it to the PATH
 2. Install JS Dependencies and Build Theme Assets
@@ -48,11 +48,11 @@ WP Engine requires that an SSH public key be added to an environment to enable G
     ```bash
     ssh-keygen -t ed25519 -C "[repository-slug]-github-autodeploy" -f ~/.ssh/github-autodeploy
     ```
-    _Note 1: Replace `[repository-slug]` with the repository slug name._
+    _Note: Replace `[repository-slug]` with the repository slug name._
 
-    _Note 2: You can replace the `~/.ssh/github-autodeploy` path with any path since this key pair is temporary and will be deleted after use._
+    _Note: You can replace the `~/.ssh/github-autodeploy` path with any path since this key pair is temporary and will be deleted after use._
     
-    _Note 3: Do not set a passphrase when generating the public/private key pair._
+    _Note: Do not set a passphrase when generating the public/private key pair._
 
 2. Copy the private key by running:
     ```bash
