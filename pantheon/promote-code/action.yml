@@ -27,12 +27,6 @@ runs:
         elif [[ "$(echo ${GITHUB_HEAD_REF})" == "staging" && "$(echo ${GITHUB_BASE_REF})" == "main" ]]; then
           echo "pantheon_env_from=test" >> $GITHUB_OUTPUT
           echo "pantheon_env_to=live" >> $GITHUB_OUTPUT
-        elif [[ "$(echo ${GITHUB_REF})" == "refs/heads/staging" ]]; then
-          echo "pantheon_env_from=dev" >> $GITHUB_OUTPUT
-          echo "pantheon_env_to=test" >> $GITHUB_OUTPUT
-        elif [[ "$(echo ${GITHUB_REF})" == "refs/heads/main" ]]; then
-          echo "pantheon_env_from=test" >> $GITHUB_OUTPUT
-          echo "pantheon_env_to=live" >> $GITHUB_OUTPUT
         else
           echo "Invalid branch detection for Pantheon code promotion."
           exit 1
