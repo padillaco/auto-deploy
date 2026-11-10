@@ -18,20 +18,38 @@ runs:
       shell: bash
       id: pantheon-env
       run: |
-        if [[ "$(echo ${GITHUB_HEAD_REF})" == feature/multidev/* && "$(echo ${GITHUB_BASE_REF})" == "develop" ]]; then
-          echo "pantheon_env_from=$(echo ${GITHUB_HEAD_REF} | cut -d '/' -f3)" >> $GITHUB_OUTPUT
-          echo "pantheon_env_to=dev" >> $GITHUB_OUTPUT
-        elif [[ "$(echo ${GITHUB_HEAD_REF})" == "develop" && "$(echo ${GITHUB_BASE_REF})" == "staging" ]]; then
-          echo "pantheon_env_from=dev" >> $GITHUB_OUTPUT
-          echo "pantheon_env_to=test" >> $GITHUB_OUTPUT
-        elif [[ "$(echo ${GITHUB_HEAD_REF})" == "staging" && "$(echo ${GITHUB_BASE_REF})" == "main" ]]; then
-          echo "pantheon_env_from=test" >> $GITHUB_OUTPUT
-          echo "pantheon_env_to=live" >> $GITHUB_OUTPUT
+        set -euo pipefail
+        head_branch="${GITHUB_HEAD_REF:-}"
+        base_branch="${GITHUB_BASE_REF:-}"
+
+        if [[ "$base_branch" == develop && "$head_branch" == multidev/* ]]; then
+          multidev_name="${head_branch#multidev/}"
+        elif [[ "$base_branch" == develop && "$head_branch" == feature/multidev/* ]]; then
+          multidev_name="${head_branch#feature/multidev/}"
         else
-          echo "Invalid branch detection for Pantheon code promotion."
+          multidev_name=''
+        fi
+
+        if [[ -n "$multidev_name" ]]; then
+          if [[ "$multidev_name" == */* || ! "$multidev_name" =~ ^[a-z0-9][a-z0-9-]{0,10}$ ]]; then
+            echo "Invalid Pantheon Multidev branch name: $head_branch" >&2
+            exit 1
+          fi
+          echo "pantheon_env_from=$multidev_name" >> "$GITHUB_OUTPUT"
+          echo 'pantheon_env_to=dev' >> "$GITHUB_OUTPUT"
+          echo 'is_multidev=true' >> "$GITHUB_OUTPUT"
+        elif [[ "$head_branch" == develop && "$base_branch" == staging ]]; then
+          echo 'pantheon_env_from=dev' >> "$GITHUB_OUTPUT"
+          echo 'pantheon_env_to=test' >> "$GITHUB_OUTPUT"
+          echo 'is_multidev=false' >> "$GITHUB_OUTPUT"
+        elif [[ "$head_branch" == staging && "$base_branch" == main ]]; then
+          echo 'pantheon_env_from=test' >> "$GITHUB_OUTPUT"
+          echo 'pantheon_env_to=live' >> "$GITHUB_OUTPUT"
+          echo 'is_multidev=false' >> "$GITHUB_OUTPUT"
+        else
+          echo 'Invalid branch detection for Pantheon code promotion.' >&2
           exit 1
         fi
-    
     - name: Install Terminus
       shell: bash
       run: |
@@ -49,7 +67,7 @@ runs:
       run: |
         echo "Promoting code from ${{ steps.pantheon-env.outputs.pantheon_env_from }} to ${{ steps.pantheon-env.outputs.pantheon_env_to }}."
 
-        if [[ $GITHUB_HEAD_REF == feature/multidev/* && "${{ steps.pantheon-env.outputs.pantheon_env_to }}" == "dev" ]]; then
+        if [[ "${{ steps.pantheon-env.outputs.is_multidev }}" == "true" && "${{ steps.pantheon-env.outputs.pantheon_env_to }}" == "dev" ]]; then
           terminus multidev:merge-to-dev ${{ inputs.pantheon_site_slug }}.${{ steps.pantheon-env.outputs.pantheon_env_from }}
         else
           terminus env:deploy ${{ inputs.pantheon_site_slug }}.${{ steps.pantheon-env.outputs.pantheon_env_to }} --note="$(git log -1 --pretty=%B)"

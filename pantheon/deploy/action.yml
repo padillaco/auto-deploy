@@ -27,17 +27,28 @@ runs:
   using: 'composite'
   steps:
     - name: Set Output Variables - Multidev Branch Name
-      if: startsWith(github.ref_name, 'feature/multidev/') || (startsWith(github.event.workflow_run.head_branch, 'feature/multidev/') && github.event.workflow.name == 'Pantheon Create Multidev Environment')
+      if: startsWith(github.ref_name, 'multidev/') || startsWith(github.ref_name, 'feature/multidev/') || ((startsWith(github.event.workflow_run.head_branch, 'multidev/') || startsWith(github.event.workflow_run.head_branch, 'feature/multidev/')) && (github.event.workflow.name == 'Pantheon Create Multidev Environment' || github.event.workflow.name == 'Pantheon - Create/Delete Multidev Environment'))
       shell: bash
       id: multidev-branch-name
       env:
         HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
       run: |
-        if [[ $GITHUB_REF_NAME == feature/multidev/* ]]; then
-          echo "name=$(echo ${GITHUB_REF_NAME} | cut -d '/' -f3)" >> $GITHUB_OUTPUT
-        else
-          echo "name=$(echo ${HEAD_BRANCH} | cut -d '/' -f3)" >> $GITHUB_OUTPUT
+        set -euo pipefail
+        branch_name="$GITHUB_REF_NAME"
+        if [[ "$branch_name" != multidev/* && "$branch_name" != feature/multidev/* ]]; then
+          branch_name="$HEAD_BRANCH"
         fi
+
+        case "$branch_name" in
+          multidev/*) multidev_name="${branch_name#multidev/}" ;;
+          feature/multidev/*) multidev_name="${branch_name#feature/multidev/}" ;;
+          *) echo "Unsupported Multidev branch: $branch_name" >&2; exit 1 ;;
+        esac
+        if [[ "$multidev_name" == */* || ! "$multidev_name" =~ ^[a-z0-9][a-z0-9-]{0,10}$ ]]; then
+          echo "Pantheon Multidev names must be a single lowercase segment, up to 11 characters, using letters, numbers, or hyphens: $multidev_name" >&2
+          exit 1
+        fi
+        echo "name=$multidev_name" >> "$GITHUB_OUTPUT"
 
     - name: Push to Remote Repository
       uses: padillaco/auto-deploy/push-to-remote-repo@v1

@@ -25,14 +25,12 @@ runs:
         INPUT_MULTIDEV_ENV_NAME: ${{ inputs.multidev_env_name }}
       shell: bash
       run: |
-        if [[ ${#INPUT_MULTIDEV_ENV_NAME} == 0 ]]; then
-          echo "The multidev environment name must not be empty.
+        set -euo pipefail
+        if [[ ! "$INPUT_MULTIDEV_ENV_NAME" =~ ^[a-z0-9][a-z0-9-]{0,10}$ ]]; then
+          echo 'The Multidev environment name must be a single lowercase segment of up to 11 letters, numbers, or hyphens.' >&2
           exit 1
-        elif [[ ${#INPUT_MULTIDEV_ENV_NAME} -ge 5 ]]; then
-          echo "The multidev environment name must be 11 characters or less.
-          exit 1
-        elif [[ $INPUT_MULTIDEV_ENV_NAME =~ '^(master|live|test|dev|settings|team|support|debug|multidev|files|tags|billing)$' ]]; then
-          echo "The multidev environment name must not be any of the following: master, live, test, dev, settings, team, support, debug, multidev, files, tags, or billing."
+        elif [[ "$INPUT_MULTIDEV_ENV_NAME" =~ ^(master|live|test|dev|settings|team|support|debug|multidev|files|tags|billing)$ ]]; then
+          echo 'The Multidev environment name is reserved by Pantheon.' >&2
           exit 1
         fi
 
