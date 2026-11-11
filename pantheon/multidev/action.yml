@@ -49,7 +49,7 @@ runs:
     - name: Create Multidev Environment
       if: inputs.action == 'create'
       shell: bash
-      run: terminus multidev:create -- ${{ inputs.pantheon_site_slug }}.dev ${{ inputs.multidev_env_name }}
+      run: terminus multidev:create --yes -- ${{ inputs.pantheon_site_slug }}.dev ${{ inputs.multidev_env_name }}
 
     - name: Delete Multidev Environment
       if: inputs.action == 'delete'
